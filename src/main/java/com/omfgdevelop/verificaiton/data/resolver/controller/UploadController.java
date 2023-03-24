@@ -65,6 +65,26 @@ public class UploadController {
         return "index";
     }
 
+    @PostMapping("/upload_many")
+    public String uploadFiles(UploadPageModel uploadPageModel, Model model, @RequestParam("files") MultipartFile[] files) throws IOException {
+        for (MultipartFile file : files) {
+
+            if (uploadPageModel.getIsOutput() != null && Objects.equals(true, uploadPageModel.getIsOutput())) {
+                outputs = fileParseService.processFile(outputs, file.getBytes(), file.getOriginalFilename());
+            } else {
+                inputs = fileParseService.processFile(inputs, file.getBytes(), file.getOriginalFilename());
+            }
+        }
+
+        updateModel(model);
+
+        uploadPageModel.setIsOutput(uploadPageModel.getIsOutput()!=null?!uploadPageModel.getIsOutput():false);
+        model.addAttribute("uploadPageModel", uploadPageModel);
+        model.addAttribute("resultModel", new ResultModel());
+
+        return "index";
+    }
+
     @PostMapping("/process")
     public String processFiles(UploadPageModel uploadPageModel, Model model) throws JsonProcessingException {
         List<VerificationData> verificationDataList = new ArrayList<>();
