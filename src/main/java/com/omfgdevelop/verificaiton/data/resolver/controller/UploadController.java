@@ -69,7 +69,7 @@ public class UploadController {
     public String uploadFiles(UploadPageModel uploadPageModel, Model model, @RequestParam("files") MultipartFile[] files) throws IOException {
         for (MultipartFile file : files) {
 
-            if (uploadPageModel.getIsOutput() != null && Objects.equals(true, uploadPageModel.getIsOutput())) {
+            if (uploadPageModel.getIsOutputMulti() != null && Objects.equals(true, uploadPageModel.getIsOutputMulti())) {
                 outputs = fileParseService.processFile(outputs, file.getBytes(), file.getOriginalFilename());
             } else {
                 inputs = fileParseService.processFile(inputs, file.getBytes(), file.getOriginalFilename());
@@ -79,6 +79,7 @@ public class UploadController {
         updateModel(model);
 
         uploadPageModel.setIsOutput(uploadPageModel.getIsOutput()!=null?!uploadPageModel.getIsOutput():false);
+        uploadPageModel.setIsOutput(uploadPageModel.getIsOutputMulti()!=null?!uploadPageModel.getIsOutputMulti():false);
         model.addAttribute("uploadPageModel", uploadPageModel);
         model.addAttribute("resultModel", new ResultModel());
 

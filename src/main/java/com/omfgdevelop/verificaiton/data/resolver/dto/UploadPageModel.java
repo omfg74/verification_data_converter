@@ -8,6 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UploadPageModel {
-
     private Boolean isOutput;
+    private Boolean isOutputMulti;
 }
