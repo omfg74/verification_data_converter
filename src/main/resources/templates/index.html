@@ -1,0 +1,71 @@
+<html>
+<head>
+    <!-- head definitions go here -->
+</head>
+<body>
+<section class="my-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <h2>Upload</h2>
+                <p th:text="${message}" th:if="${message ne null}" class="alert alert-primary"></p>
+                <form method="post" th:action="@{/upload}" th:object="${uploadPageModel}" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <input type="file" name="image" class="form-control-file">
+                    </div>
+                    <div>
+                        <label>
+                            Upload output
+                        </label>
+                        <input type="checkbox" th:field="${uploadPageModel.isOutput}">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Upload</button>
+
+                </form>
+                <form th:method="post" th:action="@{/process}">
+                    <input type="submit">Получить json</input>
+                </form>
+                <div>
+                    <label>
+                        Inputs
+                    </label>
+                    <span th:if="${msg != null}" th:text="${msg}"></span>
+
+                </div>
+                <div>
+                    <label>
+                        Outputs
+                    </label>
+                    <span th:if="${msg2 != null}" th:text="${msg2}"></span>
+                </div>
+                <div>
+                    <label>
+                        Inputs
+                    </label>
+                    <span th:if="${inputsSize != null}" th:text="${inputsSize}"></span>
+
+                </div>
+                <div>
+                    <label>
+                        Outputs
+                    </label>
+                    <span th:if="${outputsSize != null}" th:text="${outputsSize}"></span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <style>
+        textarea {
+            width: 100%;
+            height: 50vh;
+        }
+    </style>
+    <textarea placeholder="{
+&#34;input&#34;:&#34;&#34;,
+&#34;output&#34;:&#34;&#34;
+}" th:object="${resultModel}" th:field="${resultModel.result}"></textarea>
+</section>
+</body>
+</html>
