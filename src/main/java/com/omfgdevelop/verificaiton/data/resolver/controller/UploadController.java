@@ -44,36 +44,19 @@ public class UploadController {
 
     }
 
-    List<Inout> inputs = new ArrayList<>();
+    private List<Inout> inputs = new ArrayList<>();
 
-    List<Inout> outputs = new ArrayList<>();
+    private List<Inout> outputs = new ArrayList<>();
 
     @PostMapping("/upload")
     public String uploadImage(UploadPageModel uploadPageModel, Model model, @RequestParam("image") MultipartFile uploadFile) throws IOException {
-        StringBuilder fileNamesInputs = new StringBuilder();
-        StringBuilder fileNamesOutputs = new StringBuilder();
         if (uploadPageModel.getIsOutput() != null && Objects.equals(true, uploadPageModel.getIsOutput())) {
             outputs = fileParseService.processFile(outputs, uploadFile.getBytes(), uploadFile.getOriginalFilename());
-
-
         } else {
             inputs = fileParseService.processFile(inputs, uploadFile.getBytes(), uploadFile.getOriginalFilename());
-
-
         }
 
-        outputs.stream().forEach(it -> {
-            fileNamesOutputs.append(it.getFilename());
-            fileNamesOutputs.append("\n");
-        });
-        model.addAttribute("msg2", "Uploaded outputs " + fileNamesOutputs.toString());
-        inputs.stream().forEach(it -> {
-            fileNamesInputs.append(it.getFilename());
-            fileNamesInputs.append("\n");
-        });
-        model.addAttribute("msg", "Uploaded inputs " + fileNamesInputs.toString());
-        model.addAttribute("inputsSize", "Inputs size " + inputs.size());
-        model.addAttribute("outputsSize", "Outputs size " + outputs.size());
+        updateModel(model);
 
         uploadPageModel.setIsOutput(!uploadPageModel.getIsOutput());
         model.addAttribute("uploadPageModel", uploadPageModel);
@@ -105,4 +88,65 @@ public class UploadController {
     }
 
 
+    @PostMapping("/reset")
+    public String resetAll(Model model) {
+        inputs = new ArrayList<>();
+        outputs = new ArrayList<>();
+        UploadPageModel uploadPageModel = new UploadPageModel();
+        uploadPageModel.setIsOutput(false);
+        model.addAttribute("uploadPageModel", uploadPageModel);
+        model.addAttribute("resultModel", new ResultModel());
+        return "index";
+    }
+
+    @PostMapping("/reset_last_input")
+    public String resetLastInput(Model model) {
+        if (inputs.size() > 0) {
+            inputs.remove(inputs.size() - 1);
+        }
+
+        UploadPageModel uploadPageModel = new UploadPageModel();
+        uploadPageModel.setIsOutput(false);
+
+        updateModel(model);
+
+        model.addAttribute("uploadPageModel", uploadPageModel);
+        model.addAttribute("resultModel", new ResultModel());
+        return "index";
+    }
+
+    @PostMapping("/reset_last_output")
+    public String resetLastOutPut(Model model) {
+        if (outputs.size() > 0) {
+            outputs.remove(outputs.size() - 1);
+        }
+
+        UploadPageModel uploadPageModel = new UploadPageModel();
+        uploadPageModel.setIsOutput(false);
+
+        updateModel(model);
+
+        model.addAttribute("uploadPageModel", uploadPageModel);
+        model.addAttribute("resultModel", new ResultModel());
+        return "index";
+    }
+
+    private Model updateModel(Model model) {
+        StringBuilder fileNamesInputs = new StringBuilder();
+        StringBuilder fileNamesOutputs = new StringBuilder();
+
+        outputs.stream().forEach(it -> {
+            fileNamesOutputs.append(it.getFilename());
+            fileNamesOutputs.append("\n");
+        });
+        model.addAttribute("msg2", "Uploaded outputs " + fileNamesOutputs.toString());
+        inputs.stream().forEach(it -> {
+            fileNamesInputs.append(it.getFilename());
+            fileNamesInputs.append("\n");
+        });
+        model.addAttribute("msg", "Uploaded inputs " + fileNamesInputs.toString());
+        model.addAttribute("inputsSize", "Inputs size " + inputs.size());
+        model.addAttribute("outputsSize", "Outputs size " + outputs.size());
+        return model;
+    }
 }

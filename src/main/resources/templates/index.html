@@ -23,7 +23,7 @@
 
                 </form>
                 <form th:method="post" th:action="@{/process}">
-                    <input type="submit">Получить json</input>
+                    <button type="submit">Получить json</button>
                 </form>
                 <div>
                     <label>
@@ -40,14 +40,12 @@
                 </div>
                 <div>
                     <label>
-                        Inputs
                     </label>
                     <span th:if="${inputsSize != null}" th:text="${inputsSize}"></span>
 
                 </div>
                 <div>
                     <label>
-                        Outputs
                     </label>
                     <span th:if="${outputsSize != null}" th:text="${outputsSize}"></span>
                 </div>
@@ -66,6 +64,16 @@
 &#34;input&#34;:&#34;&#34;,
 &#34;output&#34;:&#34;&#34;
 }" th:object="${resultModel}" th:field="${resultModel.result}"></textarea>
+    <form th:method="post" th:action="@{/reset}">
+        <button type="submit">Сбросить</button>
+    </form>
+    <form th:method="post" th:action="@{/reset_last_input}">
+        <button type="submit">Сбросить последний input</button>
+    </form>
+    <form th:method="post" th:action="@{/reset_last_output}">
+        <button type="submit">Сбросить последний output</button>
+    </form>
 </section>
+
 </body>
 </html>
