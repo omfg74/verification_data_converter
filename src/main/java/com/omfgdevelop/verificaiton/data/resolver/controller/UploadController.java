@@ -59,6 +59,7 @@ public class UploadController {
         updateModel(model);
 
         uploadPageModel.setIsOutput(!uploadPageModel.getIsOutput());
+        uploadPageModel.setIsOutput(uploadPageModel.getIsOutputMulti()!=null?!uploadPageModel.getIsOutputMulti():false);
         model.addAttribute("uploadPageModel", uploadPageModel);
         model.addAttribute("resultModel", new ResultModel());
 
@@ -79,7 +80,7 @@ public class UploadController {
         updateModel(model);
 
         uploadPageModel.setIsOutput(uploadPageModel.getIsOutput()!=null?!uploadPageModel.getIsOutput():false);
-        uploadPageModel.setIsOutput(uploadPageModel.getIsOutputMulti()!=null?!uploadPageModel.getIsOutputMulti():false);
+        uploadPageModel.setIsOutputMulti(uploadPageModel.getIsOutputMulti()!=null?!uploadPageModel.getIsOutputMulti():false);
         model.addAttribute("uploadPageModel", uploadPageModel);
         model.addAttribute("resultModel", new ResultModel());
 
