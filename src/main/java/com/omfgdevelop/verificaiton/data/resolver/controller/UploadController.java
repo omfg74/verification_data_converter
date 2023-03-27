@@ -7,7 +7,10 @@ import com.omfgdevelop.verificaiton.data.resolver.dto.ResultModel;
 import com.omfgdevelop.verificaiton.data.resolver.dto.UploadPageModel;
 import com.omfgdevelop.verificaiton.data.resolver.dto.VerificationData;
 import com.omfgdevelop.verificaiton.data.resolver.service.FileParseService;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,10 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -59,7 +59,7 @@ public class UploadController {
         updateModel(model);
 
         uploadPageModel.setIsOutput(!uploadPageModel.getIsOutput());
-        uploadPageModel.setIsOutput(uploadPageModel.getIsOutputMulti()!=null?!uploadPageModel.getIsOutputMulti():false);
+        uploadPageModel.setIsOutput(uploadPageModel.getIsOutputMulti() != null ? !uploadPageModel.getIsOutputMulti() : false);
         model.addAttribute("uploadPageModel", uploadPageModel);
         model.addAttribute("resultModel", new ResultModel());
 
@@ -79,8 +79,8 @@ public class UploadController {
 
         updateModel(model);
 
-        uploadPageModel.setIsOutput(uploadPageModel.getIsOutput()!=null?!uploadPageModel.getIsOutput():false);
-        uploadPageModel.setIsOutputMulti(uploadPageModel.getIsOutputMulti()!=null?!uploadPageModel.getIsOutputMulti():false);
+        uploadPageModel.setIsOutput(uploadPageModel.getIsOutput() != null ? !uploadPageModel.getIsOutput() : false);
+        uploadPageModel.setIsOutputMulti(uploadPageModel.getIsOutputMulti() != null ? !uploadPageModel.getIsOutputMulti() : false);
         model.addAttribute("uploadPageModel", uploadPageModel);
         model.addAttribute("resultModel", new ResultModel());
 
@@ -170,5 +170,32 @@ public class UploadController {
         model.addAttribute("inputsSize", "Inputs size " + inputs.size());
         model.addAttribute("outputsSize", "Outputs size " + outputs.size());
         return model;
+    }
+
+    @PostMapping("/to_file")
+    private void saveToFile(Model model, UploadPageModel uploadPageModel, HttpServletResponse response) throws IOException {
+
+        List<VerificationData> verificationDataList = new ArrayList<>();
+        inputs.forEach(it -> {
+            var data = new VerificationData();
+            data.setInput(it.getData());
+            verificationDataList.add(data);
+        });
+        for (int i = 0; i < outputs.size(); i++) {
+            String data = outputs.get(i).getData();
+            verificationDataList.get(i).setOutput(data);
+        }
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String result = objectMapper.writeValueAsString(verificationDataList);
+
+        response.setContentType("application/octet-stream");
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename = data.json" ;
+        response.setHeader(headerKey, headerValue);
+        ServletOutputStream outputStream = response.getOutputStream();
+        outputStream.write(result.getBytes());
+        outputStream.close();
+
     }
 }
