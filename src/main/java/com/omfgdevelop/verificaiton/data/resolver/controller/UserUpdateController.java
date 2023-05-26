@@ -1,12 +1,11 @@
 package com.omfgdevelop.verificaiton.data.resolver.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.omfgdevelop.verificaiton.data.resolver.dto.ResultModel;
-import com.omfgdevelop.verificaiton.data.resolver.dto.UploadPageModel;
-import com.omfgdevelop.verificaiton.data.resolver.dto.UserPatchDto;
-import com.omfgdevelop.verificaiton.data.resolver.dto.UserUpdaterModel;
+import com.omfgdevelop.verificaiton.data.resolver.dto.*;
+import com.omfgdevelop.verificaiton.data.resolver.service.UserPatchService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.aot.hint.TypeReference;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +23,8 @@ import java.util.List;
 public class UserUpdateController {
 
     private final ObjectMapper objectMapper;
+
+    private final UserPatchService userPatchService;
 
     @PostMapping("/upload-csv")
     public String uploadImage(UserUpdaterModel userUpdaterModel, Model model, @RequestParam("image") MultipartFile uploadFile) throws IOException {
@@ -52,6 +53,20 @@ public class UserUpdateController {
         model.addAttribute("uploadPageModel", uploadPageModel);
         model.addAttribute("resultModel", resultModel);
         return "index";
+    }
+
+    @PostMapping("/patch")
+    private String patchUserPersonId(UserUpdaterModel userUpdaterModel, Model model) throws JsonProcessingException {
+        UpdateStatsDto updateStatsDto = userPatchService.patch(objectMapper.readValue(userUpdaterModel.getResult(), new TypeReference<List<UserPatchDto>>() {
+        }), userUpdaterModel.getUrl(), userUpdaterModel.getToken(),userUpdaterModel.getPort());
+
+        if (updateStatsDto != null) {
+            model.addAttribute("success", updateStatsDto.getUpdatedCount());
+            model.addAttribute("failed", updateStatsDto.getFailedCount());
+        }
+
+
+        return "user-update";
     }
 
 

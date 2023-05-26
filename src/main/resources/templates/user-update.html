@@ -3,10 +3,15 @@
 <body>
 <section class="my-5">
     <h2>CSV</h2>
-    <a th:href="@{verification-data}">Перейти к конвертору verification-data</a>
-    <a th:href="@{sender}">Перейти к отправке результатов</a>
+    <div style="margin-top: 10px">
+
+        <a th:href="@{verification-data}">Перейти к конвертору verification-data</a>
+        <a th:href="@{sender}">Перейти к отправке результатов</a>
+    </div>
+
     <div>
-        <form method="post" th:action="@{/upload-csv}" th:object="${userUpdaterModel}" enctype="multipart/form-data">
+        <form style="margin-top: 20px" method="post" th:action="@{/upload-csv}" th:object="${userUpdaterModel}"
+              enctype="multipart/form-data">
             <div class="form-group">
                 <input type="file" name="image" class="form-control-file">
             </div>
@@ -16,17 +21,62 @@
 
     </div>
     <div>
-        <style>
-            textarea {
-                width: 100%;
-                height: 50vh;
-            }
-        </style>
-        <textarea  th:object="${userUpdaterModel}"
-                  th:field="${userUpdaterModel.result}">
+        <label>
+            success
+        </label>
+        <span th:if="${success != null}" th:text="${success}"></span>
 
-        </textarea>
+    </div>
+    <div>
+        <label>
+            failed
+        </label>
+        <span th:if="${failed != null}" th:text="${failed}"></span>
+    </div>
+    <div>
 
+        <form method="post" th:action="@{/patch}" th:object="${userUpdaterModel}">
+            <div>
+                <textarea style=" margin-top: 10px; width: 100%; height: 50vh" th:object="${userUpdaterModel}"
+                          th:field="${userUpdaterModel.result}">
+
+                </textarea>
+            </div>
+            <div>
+                <div>
+                    <div style="margin-top: 10px">
+                        <label>
+                            Url
+                        </label>
+                    </div>
+                    <textarea style="height: 20px; width: 100vh; " placeholder="Url to send"
+                              th:object="${userUpdaterModel}"
+                              th:field="${userUpdaterModel.url}">
+
+                  </textarea>
+                    <textarea style="height: 20px; width: 20vh; " placeholder="port"
+                              th:object="${userUpdaterModel}"
+                              th:field="${userUpdaterModel.port}">
+
+                  </textarea>
+                </div>
+
+                </textarea>
+
+                <div style="margin-top: 10px">
+                    <label>
+                        Token
+                    </label>
+                </div>
+                <textarea placeholder="token" style="  width: 100%; height: 50vh"
+                          th:object="${userUpdaterModel}"
+                          th:field="${userUpdaterModel.token}">
+                </textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Patch user</button>
+
+        </form>
     </div>
 
 </section>

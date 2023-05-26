@@ -10,4 +10,10 @@ import java.util.List;
 public class UserUpdaterModel {
 
     private String result;
+
+    private String url;
+
+    private String token;
+
+    private String port;
 }
