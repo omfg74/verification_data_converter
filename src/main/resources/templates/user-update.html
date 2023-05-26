@@ -2,6 +2,9 @@
 <head>
 <body>
 <section class="my-5">
+    <h2>CSV</h2>
+    <a th:href="@{verification-data}">Перейти к конвертору verification-data</a>
+    <a th:href="@{sender}">Перейти к отправке результатов</a>
     <div>
         <form method="post" th:action="@{/upload-csv}" th:object="${userUpdaterModel}" enctype="multipart/form-data">
             <div class="form-group">

@@ -1,12 +1,15 @@
 package com.omfgdevelop.verificaiton.data.resolver.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.omfgdevelop.verificaiton.data.resolver.dto.ResultModel;
+import com.omfgdevelop.verificaiton.data.resolver.dto.UploadPageModel;
 import com.omfgdevelop.verificaiton.data.resolver.dto.UserPatchDto;
 import com.omfgdevelop.verificaiton.data.resolver.dto.UserUpdaterModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.aot.hint.TypeReference;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,6 +43,15 @@ public class UserUpdateController {
         userUpdaterModel.setResult(userString);
         model.addAttribute("userUpdaterModel", userUpdaterModel);
         return "user-update";
+    }
+
+    @GetMapping("/verification-data")
+    public String verificationDataController(Model model) {
+        UploadPageModel uploadPageModel = new UploadPageModel();
+        ResultModel resultModel = new ResultModel();
+        model.addAttribute("uploadPageModel", uploadPageModel);
+        model.addAttribute("resultModel", resultModel);
+        return "index";
     }
 
 
