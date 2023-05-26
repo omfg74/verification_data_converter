@@ -6,11 +6,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.omfgdevelop.verificaiton.data.resolver.dto.*;
 import com.omfgdevelop.verificaiton.data.resolver.service.UserPatchService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -57,14 +59,23 @@ public class UserUpdateController {
 
     @PostMapping("/patch")
     private String patchUserPersonId(UserUpdaterModel userUpdaterModel, Model model) throws JsonProcessingException {
-        UpdateStatsDto updateStatsDto = userPatchService.patch(objectMapper.readValue(userUpdaterModel.getResult(), new TypeReference<List<UserPatchDto>>() {
-        }), userUpdaterModel.getUrl(), userUpdaterModel.getToken(),userUpdaterModel.getPort());
 
-        if (updateStatsDto != null) {
-            model.addAttribute("success", updateStatsDto.getUpdatedCount());
-            model.addAttribute("failed", updateStatsDto.getFailedCount());
+        try {
+
+            UpdateStatsDto updateStatsDto = userPatchService.patch(objectMapper.readValue(userUpdaterModel.getResult(), new TypeReference<List<UserPatchDto>>() {
+            }), userUpdaterModel.getUrl(), userUpdaterModel.getToken(), userUpdaterModel.getPort());
+
+            if (updateStatsDto != null) {
+                model.addAttribute("success", updateStatsDto.getUpdatedCount());
+                model.addAttribute("failed", updateStatsDto.getFailedCount());
+                model.addAttribute("error", "");
+                model.addAttribute("stack_trace", "");
+            }
+
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("stack_trace", ExceptionUtils.getStackTrace(e));
         }
-
 
         return "user-update";
     }

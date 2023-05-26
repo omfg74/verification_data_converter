@@ -21,6 +21,11 @@
 
     </div>
     <div>
+
+        <span style="color: red" th:if="${error != null}" th:text="${error}"></span>
+
+    </div>
+    <div>
         <label>
             success
         </label>
@@ -77,6 +82,13 @@
             <button type="submit" class="btn btn-primary">Patch user</button>
 
         </form>
+    </div>
+    <div>
+        <div>
+
+            <span style="color: red" th:if="${stack_trace != null}" th:text="${stack_trace}"></span>
+
+        </div>
     </div>
 
 </section>

@@ -19,7 +19,7 @@ import java.util.List;
 public class UserPatchService {
 
 
-    public UpdateStatsDto patch(List<UserPatchDto> dto, String url, String token, String port) throws JsonProcessingException {
+    public UpdateStatsDto patch(List<UserPatchDto> dto, String url, String token, String port) throws Exception {
         RestTemplate restTemplate = new RestTemplate();
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -32,10 +32,10 @@ public class UserPatchService {
         HttpEntity<?> entity = new HttpEntity<>(payLoad, headers);
         var uri = UriComponentsBuilder.fromUri(URI.create(url)).port(port).pathSegment("").build().toUri();
 
-            ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.PUT, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.PUT, entity, String.class);
         UpdateStatsDto updateStatsDto = switch (response.getStatusCode().value()) {
             case 200, 201 -> objectMapper.readValue(response.getBody(), UpdateStatsDto.class);
-            default -> throw new HttpServerErrorException(response.getStatusCode());
+            default -> throw new Exception(response.getStatusCode() + "\n " + response.getBody());
         };
 
         return updateStatsDto;

@@ -13,4 +13,6 @@ public class UpdateStatsDto {
 
     int failedCount;
 
+    int error;
+
 }
