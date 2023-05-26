@@ -1,5 +1,102 @@
 <html>
 <head>
-    <body></body>
+<body>
+<H2>Send complete</H2>
+
+
+
+<div th:object="${completeModel}">
+    <form method="post" th:action="@{/sender/complete}" th:object="${completeModel}">
+        <div>
+            <label>
+                Insert ids
+            </label>
+
+        </div>
+        <div>
+            <label>
+                Running
+            </label>
+            <span th:if="${running != null}" th:text="${running}"></span>
+
+        </div>
+
+        <div>
+                <textarea style=" margin-top: 10px; width: 80%; height: 30vh" th:object="${completeModel}"
+                          th:field="${completeModel.idsString}">
+
+                </textarea>
+        </div>
+        <div>
+            <div style="margin-top: 10px">
+                <label>
+                    Url
+                </label>
+            </div>
+            <textarea style="height: 20px; width: 100vh; " placeholder="http://url/endpoint"
+                      th:object="${completeModel}"
+                      th:field="${completeModel.url}">
+            </textarea>
+            <textarea style="height: 20px; width: 20vh; " placeholder="port"
+                      th:object="${completeModel}"
+                      th:field="${completeModel.port}">
+            </textarea>
+            <div style="margin-top: 10px">
+                <label>
+                    Token
+                </label>
+            </div>
+            <textarea placeholder="token" style="  width: 100%; height: 20vh"
+                      th:object="${completeModel}"
+                      th:field="${completeModel.token}">
+                </textarea>
+
+        </div>
+
+        <button type="submit">Complete</button>
+
+
+        <div>
+
+            <div>
+                <label>
+                    Success count
+                </label>
+                <span th:if="${success_count != null}" th:text="${success_count}"></span>
+
+            </div>
+
+            <div>
+        <textarea style=" margin-top: 10px; width: 80%; height: 20vh" th:object="${completeModel}"
+                  th:field="${completeModel.success}">
+
+                </textarea>
+            </div>
+        </div>
+        <div>
+            <div>
+
+                <label>
+                    Failed count
+                </label>
+                <span th:if="${failed_count != null}" th:text="${failed_count}"></span>
+            </div>
+            <textarea style=" margin-top: 10px; width: 80%; height: 20vh" th:object="${completeModel}"
+                      th:field="${completeModel.failed}">
+
+                </textarea>
+        </div>
+
+    </form>
+    <form th:method="post" th:action="@{/sender/check}" >
+        <button type="submit">Check</button>
+    </form>
+</div>
+<div>
+
+
+
+</div>
+</body>
 </head>
 </html>

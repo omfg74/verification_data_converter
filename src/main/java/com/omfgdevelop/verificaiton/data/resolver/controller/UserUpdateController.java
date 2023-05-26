@@ -57,6 +57,18 @@ public class UserUpdateController {
         return "index";
     }
 
+    @GetMapping("/sender")
+    public String completeController(Model model) {
+        CompleteModel completeModel = new CompleteModel();
+        model.addAttribute("success_count", 0);
+        model.addAttribute("failed_count", 0);
+        model.addAttribute("success", new ArrayList<>());
+        model.addAttribute("error","");
+        model.addAttribute("failed", new ArrayList<>());
+        model.addAttribute("completeModel", completeModel);
+        return "sender";
+    }
+
     @PostMapping("/patch")
     private String patchUserPersonId(UserUpdaterModel userUpdaterModel, Model model) throws JsonProcessingException {
 
