@@ -2,15 +2,12 @@ package com.omfgdevelop.verificaiton.data.resolver.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.omfgdevelop.verificaiton.data.resolver.dto.Inout;
-import com.omfgdevelop.verificaiton.data.resolver.dto.ResultModel;
-import com.omfgdevelop.verificaiton.data.resolver.dto.UploadPageModel;
-import com.omfgdevelop.verificaiton.data.resolver.dto.VerificationData;
+import com.omfgdevelop.verificaiton.data.resolver.dto.*;
 import com.omfgdevelop.verificaiton.data.resolver.service.FileParseService;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,10 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -64,6 +58,13 @@ public class UploadController {
         model.addAttribute("resultModel", new ResultModel());
 
         return "index";
+    }
+
+    @GetMapping("/user-update")
+    public String userUpdater(Model model) {
+        UserUpdaterModel userUpdaterModel = new UserUpdaterModel();
+        model.addAttribute("userUpdaterModel", userUpdaterModel);
+        return "user-update";
     }
 
     @PostMapping("/upload_many")
@@ -191,7 +192,7 @@ public class UploadController {
 
         response.setContentType("application/octet-stream");
         String headerKey = "Content-Disposition";
-        String headerValue = "attachment; filename = data.json" ;
+        String headerValue = "attachment; filename = data.json";
         response.setHeader(headerKey, headerValue);
         ServletOutputStream outputStream = response.getOutputStream();
         outputStream.write(result.getBytes());

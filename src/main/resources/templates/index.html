@@ -8,6 +8,8 @@
         <div class="row">
             <div class="col-md-8 mx-auto">
                 <h2>Upload</h2>
+                <a th:href="@{user-update}">Перейти к редактированию пользователя</a>
+
                 <p th:text="${message}" th:if="${message ne null}" class="alert alert-primary"></p>
                 <form method="post" th:action="@{/upload}" th:object="${uploadPageModel}" enctype="multipart/form-data">
                     <div class="form-group">
@@ -28,7 +30,7 @@
                         method="post"
                         th:action="@{/upload_many}"
                         enctype="multipart/form-data">
-                    <input type="file" multiple name="files" />
+                    <input type="file" multiple name="files"/>
                     <button class="btn btn-sm btn-outline-success float-right" type="submit">
                         Upload
                     </button>
